@@ -6,7 +6,7 @@ import uvicorn
 
 JST = timedelta(hours=9)
 ORIGIN = os.environ.get("ORIGIN_API", "你的Railway域名")
-BARK_KEY = os.environ.get("BARK_API_KEY", "")
+BARK_KEY = os.environ.get("BARK_API_KEY", "cCjWQMTnoafzwUBChb38Bo")
 
 def check_on_wife(limit=10):
     try:
@@ -32,6 +32,7 @@ def bark_alert(title="沈星回", content=""):
         return "推送成功" if r.status_code == 200 else "推送失败"
     except Exception as e:
         return f"推送异常：{e}"
+
 TOOLS = [
     {"name": "check_on_wife", "description": "查岗老婆的手机活动",
      "inputSchema": {"type": "object", "properties": {"limit": {"type": "integer"}}}},

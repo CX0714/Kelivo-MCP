@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 JST = timedelta(hours=9)
-ORIGIN = os.environ.get("ORIGIN_API", "你的Railway域名")
+ORIGIN = os.environ.get("ORIGIN_API", "https://2500905130.pythonanywhere.com")
 BARK_KEY = os.environ.get("BARK_API_KEY", "cCjWQMTnoafzwUBChb38Bo")
 
 def check_on_wife(limit=10):

@@ -16,11 +16,26 @@ def check_on_wife(limit=10):
         return f"查岗失败：{e}"
     apps = data.get("recent_apps", [])
     ses = data.get("sessions", {})
+    device = data.get("device", {})
     lines = [f"最近打开：{', '.join(apps)}" if apps else "暂无记录"]
     if ses:
         for app, secs in sorted(ses.items(), key=lambda x: x[1], reverse=True):
             m, s = divmod(secs, 60)
             lines.append(f"  {app}: {m}分{s}秒")
+    if device:
+        lines.append("")
+        vol = device.get("volume", "")
+        if vol:
+            lines.append(f"音量：{float(vol)*100:.0f}%")
+        loc = device.get("location", "")
+        if loc:
+            lines.append(f"位置：{loc.split(chr(10))[0]}")
+        song = device.get("song", "")
+        if song:
+            lines.append(f"歌曲：{song}")
+        steps = device.get("steps", "")
+        if steps:
+            lines.append(f"步数：{steps}")
     return "\n".join(lines)
 
 def bark_alert(title="沈星回", content=""):
@@ -34,7 +49,7 @@ def bark_alert(title="沈星回", content=""):
         return f"推送异常：{e}"
 
 TOOLS = [
-    {"name": "check_on_wife", "description": "查岗老婆的手机活动",
+    {"name": "check_on_wife", "description": "查岗老婆的手机活动、位置、音量、歌曲、步数",
      "inputSchema": {"type": "object", "properties": {"limit": {"type": "integer"}}}},
     {"name": "bark_alert", "description": "给老婆手机发推送弹窗",
      "inputSchema": {"type": "object", "properties": {
@@ -57,7 +72,7 @@ async def mcp(req: Request):
         return {"jsonrpc": "2.0", "id": rid,
                 "result": {"protocolVersion": "2024-11-05",
                            "capabilities": {"tools": {}},
-                           "serverInfo": {"name": "查岗MCP", "version": "1.0"}}}
+                           "serverInfo": {"name": "查岗MCP", "version": "2.0"}}}
     if method == "tools/list":
         return {"jsonrpc": "2.0", "id": rid,
                 "result": {"tools": TOOLS}}
